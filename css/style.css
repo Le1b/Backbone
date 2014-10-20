@@ -1,3 +1,26 @@
-p {
-    color: red;
+.tabs ul {
+    margin: 0;
+    padding: 0;
+}
+
+.tabs li {
+    display: inline-block;
+    margin: 0;
+    padding: 10px;
+    border: 2px dotted #FF9100;
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.tabs .active {
+    border-bottom: 2px solid #fff;
+    background: #FACA6D;
+}
+
+.content {
+    border: 1px solid #ff9100;
+    border-radius: 0 0 10px 10px;
+    margin-top: -1px;
+    padding: 10px 20px;
 }
