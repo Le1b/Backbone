@@ -8,9 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'json!tabs.json'], function ($, _, B
         initialize: function () {
             new App.Router.Dummy();
             Backbone.history.start();
-//            tabsJSON.forEach(function(obj) {
-//                console.info(obj.order);
-//            });
+            $(Backbone.history.location.hash).addClass('active');
         }
     };
 
@@ -44,7 +42,7 @@ define(['jquery', 'underscore', 'backbone', 'json!tabs.json'], function ($, _, B
         tagName: 'li',
         className: '',
         render: function () {
-            this.$el.attr('id', this.model.get('order'));
+            this.$el.attr('id', this.model.get('id'));
             this.$el.html(this.model.get('title'));
             return this;
         },
@@ -54,7 +52,7 @@ define(['jquery', 'underscore', 'backbone', 'json!tabs.json'], function ($, _, B
         },
 
         showContent: function () {
-            window.location.hash = this.model.get('id');
+            Backbone.history.location.replace('#'+this.model.get('id'));
             $('.tabs li').removeClass('active');
             this.$el.addClass('active');
         }
@@ -74,30 +72,20 @@ define(['jquery', 'underscore', 'backbone', 'json!tabs.json'], function ($, _, B
 
         routes: {
             ''          : 'defaultAction',
-            'dummyTable': 'dummyTable',
-            'dummyList' : 'dummyList',
-            'dummyChart': 'dummyChart',
+            'dummyTable': 'loadTabFile',
+            'dummyList' : 'loadTabFile',
+            'dummyChart': 'loadTabFile',
             '*actions'  : 'defaultAction'
         },
 
-        dummyTable: function () {
-            this.loadTabFile();
-        },
-
-        dummyList: function () {
-            this.loadTabFile();
-        },
-
-        dummyChart: function () {
-            this.loadTabFile();
-        },
-
         defaultAction: function () {
+            $('#'+this.appCollection.at(0).get('id')).addClass('active');
             this.loadTabFile(this.appCollection.at(0).get('id'));
         },
 
         loadTabFile: function (url) {
-            url = !!url ? url : window.location.hash.replace('#', '');
+            url = !!url ? url : Backbone.history.location.hash.slice(1);
+
             require(['tabs/' + url], function (Tabs) {
                 var tabContent = new Tabs();
                 tabContent.render();
