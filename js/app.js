@@ -22,7 +22,7 @@ define(['jquery', 'underscore', 'backbone', 'json!tabs.json'], function ($, _, B
     });
 
     App.Views.Dummies = Backbone.View.extend({
-        tagName: 'ul',
+        $el: $('ul.tabs'),
         render: function () {
             this.collection.each(this.appendOne, this);
             $('.tabs').html(this.el);
@@ -40,10 +40,9 @@ define(['jquery', 'underscore', 'backbone', 'json!tabs.json'], function ($, _, B
             this.model.on('change', this.render(), this);
         },
         tagName: 'li',
-        className: '',
         render: function () {
-            this.$el.attr('id', this.model.get('id'));
             this.$el.html(this.model.get('title'));
+
             return this;
         },
 
@@ -72,19 +71,16 @@ define(['jquery', 'underscore', 'backbone', 'json!tabs.json'], function ($, _, B
 
         routes: {
             ''          : 'defaultAction',
-            'dummyTable': 'loadTabFile',
-            'dummyList' : 'loadTabFile',
-            'dummyChart': 'loadTabFile',
+            ':dummyTable': 'loadTabFile',
             '*actions'  : 'defaultAction'
         },
 
         defaultAction: function () {
-            $('#'+this.appCollection.at(0).get('id')).addClass('active');
+            $('ul.tabs li:first-child').addClass('active');
             this.loadTabFile(this.appCollection.at(0).get('id'));
         },
 
         loadTabFile: function (url) {
-            url = !!url ? url : Backbone.history.location.hash.slice(1);
 
             require(['tabs/' + url], function (Tabs) {
                 var tabContent = new Tabs();
